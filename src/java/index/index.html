@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <style>
+            * { paddimg: 0; margin: 0; border: 0; border: none; vertical-align: baseline; }
+            body {
+                background-color: #eee;
+            }
+            .menu {
+                display: inline-block;
+                text-align: center;
+              
+            }
+            .menu a {
+                padding: 15px;
+                display: inline-block;
+                float: left;
+                text-decoration: none;
+                font-weight: bold;
+                color: #9892a2;
+                font-size: 20px;
+                font-family: "'Lucida Console', Consolas, Serif";
+            }
+            .menu a:last-child {
+                color: #bb92a2;
+            }
+            .menu a:hover {
+                color: #444;
+            }
+            .form {
+                font-size: 14px;
+            }
+            .form * {
+                float: left;
+                margin: 5px;
+            }
+            .form input[type="email"]{
+                width: 150px;
+            }
+            .form input[type="password"]{
+                width: 100px;
+            }
+            .form input[type="submit"]{
+                width: 50px;
+            }
+            .adscode {
+                width: 300px;
+                height: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Servlet index at " + request.getContextPath() + "</h1>
+        <div class="menu">
+            <a href="proiect-servlets/controlpanel">controlpanel</a>
+            <a href="proiect-servlets/ads">ads</a>
+            <a href="proiect-servlets/login">login</a>
+            <a href="proiect-servlets/logout">logout</a>
+            <a href="proiect-servlets/debug">debug</a>
+        </div>
+    </body>
+</html>

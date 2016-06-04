@@ -1,0 +1,302 @@
+CREATE TABLE IF NOT EXISTS users
+(ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    user      VARCHAR(128)  NOT NULL, 
+    pass      VARCHAR(128)  NOT NULL, 
+    credits   int
+);
+
+CREATE TABLE IF NOT EXISTS ads
+(ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    campaign  VARCHAR(16)  NOT NULL, 
+    link      VARCHAR(256)  NOT NULL, 
+    shows      VARCHAR(256)  NOT NULL, 
+    width     int, 
+    height    int, 
+    type      tinyint(2)
+);
+
+
+
+UPDATE  contacte "+
+                +"SET"
+                +"nume = '"+nume+"',"
+                +"prenume = '"+prenume+"',"
+                +"mobil = '"+mobil+"',"
+                +"fix = '"+fix+"',"
+                +"email = '"+email+"',"
+                +"adresa = '"+adresa+"',"
+                +"oras = '"+oras+"',"
+                +"judet = '"+judet+"',"
+                +"codpostal = '"+codpostal+"'"
+                +"WHERE id = '"+id+"'"
+            +";"
+
+UPDATE ads
+SET 
+link = '+link+'
+link = '+shows+'
+link = '+width+'
+link = '+height+'
+link = '+type+'
+WHERE id = '+id+';
+
+SELECT id FROM users WHERE 
+
+            /*
+            //nume, prenume, mobil, fix, email, adresa, oras, judet, codpostal
+            String id = request.getParameter("id");
+            String nume = request.getParameter("nume");
+            String prenume = request.getParameter("prenume");
+            String mobil = request.getParameter("mobil");
+            String fix = request.getParameter("fix");
+            String email = request.getParameter("email");
+            String adresa = request.getParameter("adresa");
+            String oras = request.getParameter("oras");
+            String judet = request.getParameter("judet");
+            String codpostal = request.getParameter("codpostal");
+            result = sql("INSERT INTO  contacte
+                (nume, prenume, mobil, fix, email, adresa, oras, judet, codpostal)
+                VALUES (
+                nume = '"+nume+"',
+                prenume = '"+prenume+"',
+                mobil = '"+mobil+"',
+                fix = '"+fix+"',
+                email = '"+email+"',
+                adresa = '"+adresa+"',
+                oras = '"+oras+"',
+                judet = '"+judet+"',
+                codpostal = '"+codpostal+"'
+                )
+            ;");
+            out.println(result);
+            */
+
+
+            result = sql("UPDATE  contacte "+
+                +"SET"
+                +"nume = '"+nume+"',"
+                +"prenume = '"+prenume+"',"
+                +"mobil = '"+mobil+"',"
+                +"fix = '"+fix+"',"
+                +"email = '"+email+"',"
+                +"adresa = '"+adresa+"',"
+                +"oras = '"+oras+"',"
+                +"judet = '"+judet+"',"
+                +"codpostal = '"+codpostal+"'"
+                +"WHERE id = '"+id+"'"
+            +";");
+
+            String sql ="DELETE * FROM contacte"+
+                "WHERE id LIKE '%"+request.getParameter("idToDelete")+"%';");
+
+    public static String[][] sqlq(PrintWriter out, String sql, String db) {
+        String[][] toReturn = null;
+        
+        if (db.length() < 1)
+            db = "servletsdb";
+        // JDBC driver name and database URL
+        String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+        String DB_URL = "jdbc:mysql://localhost/"+db;
+
+        //  Database credentials
+        String USER = "root";
+        String PASS = "root";
+
+        // STEP 1: Connecting link(s)
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+            //STEP 2: Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            //STEP 3: Open a connection
+            out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+            //STEP 4: Execute a query
+            out.println("Creating statement...");
+            stmt = conn.createStatement();
+            /* sql = "SELECT id, first, last, age FROM Employees"; */
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            
+            int columnNr = rsmd.getColumnCount();
+            String[] column = new String[columnNr];
+            
+            // Retrieve Column Names
+            String colName = new String("");
+            for (int i = 1; i <= columnNr; i++){
+                colName = rsmd.getColumnName(i);
+                column[i-1] = colName;
+            }
+            
+            toReturn = new String[columnNr][];
+            int i=0;
+
+            //STEP 5: Extract data from result set
+            while(rs.next()){
+                // Construct `toReturn`
+                for (int j = 0; j < columnNr; j++){
+                    toReturn[i][j] = rs.getString(column[i]);
+                }
+                i++;
+            }
+           
+            //STEP 6: Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }catch(Exception e){
+           //Handle errors for Class.forName
+            e.printStackTrace();
+        }finally{
+           //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+        return toReturn;
+    }
+    public static void sqlecho(PrintWriter out, String sql, String db) {
+        if (db.length() < 1)
+            db = "servletsdb";
+        String[][] q = sqlq(out, sql, db);
+        if(q != null){
+            out.println("Table Populated<br/>");
+        }else{
+            out.println("Table NOT Populated<br/>");
+        }
+        out.println(q+"<br/>");
+        /*
+        out.println("Starting to echo : <br/>");
+        for (String[] q1 : q) {
+            out.println("\"" + q1[0] + "\" : \"" + q1[1] + "\"");
+        }
+        */
+    }
+    
+    protected void createTable(PrintWriter out, String db) {
+        if (db.length() < 1)
+            db = "servletsdb";
+        // JDBC driver name and database URL
+        String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+        String DB_URL = "jdbc:mysql://localhost/";
+
+        //  Database credentials
+        String USER = "root";
+        String PASS = "root";
+
+        // STEP 1: Connecting link(s)
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+            //STEP 2: Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            //STEP 3: Open a connection
+            out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+            //STEP 4: Execute a query
+            out.println("Creating statement...");
+            stmt = conn.createStatement();
+           
+            String sql = " CREATE TABLE IF NOT EXISTS " + db +
+                "(ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
+                " nume         VARCHAR(256)  NOT NULL, " + 
+                " prenume      VARCHAR(256)  NOT NULL, " + 
+                " mobil        VARCHAR(15)   NOT NULL, " + 
+                " fix          VARCHAR(15)           , " + 
+                " email        VARCHAR(256)  NOT NULL, " +
+                " adresa       VARCHAR(256)          , " +  
+                " oras         VARCHAR(64)           , " +
+                " judet        VARCHAR(64)           , " +
+                " codpostal    VARCHAR(12)           ); ";
+            ResultSet rs = stmt.executeQuery(sql);
+            //STEP 6: Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }catch(Exception e){
+           //Handle errors for Class.forName
+            e.printStackTrace();
+        }finally{
+           //finally block used to close resources
+           try{
+               if(stmt!=null)
+                   stmt.close();
+           }catch(SQLException se2){
+           }// nothing we can do
+           try{
+              if(conn!=null)
+                 conn.close();
+           }catch(SQLException se){
+              se.printStackTrace();
+           }//end finally try
+        }//end try
+    }
+
+
+    public static String viewTable(String query)
+    throws SQLException {
+        String toReturn = null;
+        String dbName = "servletsdb";
+
+        // JDBC driver name and database URL
+        String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+        String DB_URL = "jdbc:mysql://localhost/"+dbName;
+
+        //  Database credentials
+        String USER = "root";
+        String PASS = "root";
+        
+        Connection con = null;
+        Statement stmt = null;
+        try {
+            con = DriverManager.getConnection(DB_URL,USER,PASS);
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            int columnNr = rsmd.getColumnCount();
+            String[] column = new String[columnNr];
+
+            // Retrieve Column Names
+            String colName;
+            for (int i = 1; i <= columnNr; i++){
+                colName = rsmd.getColumnName(i);
+                column[i-1] = colName;
+                toReturn = toReturn + " " + colName;
+            }
+            toReturn = toReturn + "<br/>\n";
+
+            //STEP 5: Extract data from result set
+            while(rs.next()){
+                // Construct `toReturn`
+                for (int j = 0; j < columnNr; j++){
+                    toReturn = toReturn + rs.getString(column[j]) + " ";
+                }
+                toReturn = toReturn + "<br/>\n";
+            }
+        } catch (SQLException e ) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+        return toReturn;
+    }
+
